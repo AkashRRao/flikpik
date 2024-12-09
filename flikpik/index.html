@@ -6,13 +6,25 @@
     <title>FlikPik</title>
     <style>
         body {
+            margin: 20px;
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
             transition: background-color 0.3s, color 0.3s;
         }
         h1 {
             color: #333;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        button, input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 16px;
         }
         .dark-theme {
             background-color: #263238;
@@ -30,17 +42,27 @@
             color: #ECEFF1;
             border: 1px solid #ECEFF1;
         }
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+            button, input {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to FlikPik</h1>
-    <button id="create-room">Create Room</button>
-    <input type="text" id="room-name" placeholder="Enter room name to join">
-    <button id="join-room">Join Room</button>
-    <button id="toggle-theme">Toggle Theme</button>
-    <p id="room-info"></p>
-    <p id="user-info"></p>
-    <p id="error-message" style="color: red;"></p>
+    <div class="container">
+        <h1>Welcome to FlikPik</h1>
+        <button id="create-room">Create Room</button>
+        <input type="text" id="room-name" placeholder="Enter room name to join">
+        <button id="join-room">Join Room</button>
+        <button id="toggle-theme">Toggle Theme</button>
+        <p id="room-info"></p>
+        <p id="user-info"></p>
+        <p id="error-message" style="color: red;"></p>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
