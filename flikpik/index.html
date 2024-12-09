@@ -13,40 +13,39 @@
         h1 {
             color: #333;
         }
-        .movie-tile {
-            display: inline-block;
-            width: 200px;
-            margin: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .movie-tile img {
-            width: 100%;
-            border-radius: 10px;
-        }
-        .movie-title {
-            font-size: 18px;
-            margin: 10px 0;
-        }
     </style>
 </head>
 <body>
     <h1>Welcome to FlikPik</h1>
-    <p>Your go-to app for picking the best flicks!</p>
-    <div id="movie-of-the-night" class="movie-tile">
-        <img id="movie-poster" src="" alt="Movie of the Night">
-        <div id="movie-title" class="movie-title"></div>
-    </div>
+    <button id="create-room">Create Room</button>
+    <input type="text" id="room-name" placeholder="Enter room name to join">
+    <button id="join-room">Join Room</button>
+    <p id="room-info"></p>
+    <p id="user-info"></p>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        fetch('http://localhost:3000/movie-of-the-night')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('movie-poster').src = data.poster;
-                document.getElementById('movie-title').textContent = data.title;
-            })
-            .catch(error => console.error('Error fetching movie:', error));
+        const socket = io();
+
+        document.getElementById('create-room').addEventListener('click', () => {
+            socket.emit('createRoom');
+        });
+
+        document.getElementById('join-room').addEventListener('click', () => {
+            const roomName = document.getElementById('room-name').value;
+            socket.emit('joinRoom', roomName);
+        });
+
+        socket.on('roomCreated', (roomName) => {
+            document.getElementById('room-info').textContent = `Room created: ${roomName}`;
+        });
+
+        socket.on('roomJoined', (roomName) => {
+            document.getElementById('room-info').textContent = `Joined room: ${roomName}`;
+        });
+
+        socket.on('userAssigned', (userName) => {
+            document.getElementById('user-info').textContent = `Your name: ${userName}`;
+        });
     </script>
 </body>
 </html>
