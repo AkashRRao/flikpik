@@ -25,6 +25,9 @@ function generateRandomName() {
     return `${adjective}${animal}${Math.floor(Math.random() * 1000)}`;
 }
 
+// List of active rooms
+const activeRooms = new Set();
+
 io.on('connection', (socket) => {
     console.log('A user connected');
 
@@ -33,15 +36,18 @@ io.on('connection', (socket) => {
 
     socket.on('createRoom', () => {
         const roomName = Math.random().toString(36).substring(2, 7);
+        activeRooms.add(roomName);
         socket.join(roomName);
         socket.emit('roomCreated', roomName);
-        console.log(`Room created: ${roomName}`);
     });
 
     socket.on('joinRoom', (roomName) => {
-        socket.join(roomName);
-        socket.emit('roomJoined', roomName);
-        console.log(`User joined room: ${roomName}`);
+        if (activeRooms.has(roomName)) {
+            socket.join(roomName);
+            socket.emit('roomJoined', roomName);
+        } else {
+            socket.emit('error', 'room does not exist');
+        }
     });
 
     socket.on('disconnect', () => {

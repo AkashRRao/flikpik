@@ -40,6 +40,7 @@
     <button id="toggle-theme">Toggle Theme</button>
     <p id="room-info"></p>
     <p id="user-info"></p>
+    <p id="error-message" style="color: red;"></p>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -55,10 +56,16 @@
 
         socket.on('roomCreated', (roomName) => {
             document.getElementById('room-info').textContent = `Room created: ${roomName}`;
+            document.getElementById('error-message').textContent = '';
         });
 
         socket.on('roomJoined', (roomName) => {
             document.getElementById('room-info').textContent = `Joined room: ${roomName}`;
+            document.getElementById('error-message').textContent = '';
+        });
+
+        socket.on('error', (message) => {
+            document.getElementById('error-message').textContent = message;
         });
 
         socket.on('userAssigned', (userName) => {
