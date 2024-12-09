@@ -1,7 +1,7 @@
 # flikpik
 
 ## creators
-* Akash Rao
-* Rahul Fernandez
-* Ahmed Tariq
+* akash rao
+* rahul joseph fernandez
+* ahmed tariq
 
