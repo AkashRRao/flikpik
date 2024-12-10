@@ -16,6 +16,18 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+const movies = [
+    {
+        title: 'The Shawshank Redemption',
+        // png for the poster
+        poster: 'https://upload.wikimedia.org/wikipedia/en/8/81/ShawshankRedemptionMoviePoster.jpg',
+    },
+    {
+        title: "Schindler's List",
+        poster: 'https://upload.wikimedia.org/wikipedia/en/3/38/Schindler%27s_List_movie.jpg',
+    }
+]
+
 // Random name generator function
 function generateRandomName() {
     const adjectives = ['Quick', 'Lazy', 'Happy', 'Sad', 'Angry'];
@@ -25,7 +37,6 @@ function generateRandomName() {
     return `${adjective}${animal}${Math.floor(Math.random() * 1000)}`;
 }
 
-// List of active rooms
 const activeRooms = new Set();
 
 io.on('connection', (socket) => {
@@ -46,7 +57,14 @@ io.on('connection', (socket) => {
             socket.join(roomName);
             socket.emit('roomJoined', roomName);
         } else {
-            socket.emit('error', 'room does not exist');
+            socket.emit('error', 'Room does not exist');
+        }
+    });
+
+    socket.on('enterMovieSelection', () => {
+        const roomName = Array.from(socket.rooms)[1]; // Get the room name
+        if (roomName) {
+            io.to(roomName).emit('enterMovieSelection', movies);
         }
     });
 

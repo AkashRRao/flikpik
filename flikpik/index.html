@@ -50,6 +50,36 @@
                 font-size: 14px;
             }
         }
+        .movie-selection {
+            display: none;
+        }
+        .movie-tile {
+            display: inline-block;
+            width: 150px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .movie-tile img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .movie-title {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .bottom-row {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background-color: #fff;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -59,9 +89,23 @@
         <input type="text" id="room-name" placeholder="Enter room name to join">
         <button id="join-room">Join Room</button>
         <button id="toggle-theme">Toggle Theme</button>
+        <button id="movie-selection">Enter Movie Selection Mode</button>
         <p id="room-info"></p>
         <p id="user-info"></p>
         <p id="error-message" style="color: red;"></p>
+    </div>
+    <div class="movie-selection">
+        <div class="container">
+            <h1>Movie Selection</h1>
+            <div id="movies">
+                <!-- Movie tiles will be inserted here -->
+            </div>
+        </div>
+        <div class="bottom-row">
+            <button id="suggest">Suggest</button>
+            <button id="vibe-check">Vibe Check</button>
+            <button id="veto">Veto</button>
+        </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -74,6 +118,10 @@
         document.getElementById('join-room').addEventListener('click', () => {
             const roomName = document.getElementById('room-name').value;
             socket.emit('joinRoom', roomName);
+        });
+
+        document.getElementById('movie-selection').addEventListener('click', () => {
+            socket.emit('enterMovieSelection');
         });
 
         socket.on('roomCreated', (roomName) => {
@@ -92,6 +140,22 @@
 
         socket.on('userAssigned', (userName) => {
             document.getElementById('user-info').textContent = `Your name: ${userName}`;
+        });
+
+        socket.on('enterMovieSelection', (movies) => {
+            document.querySelector('.container').style.display = 'none';
+            document.querySelector('.movie-selection').style.display = 'block';
+            const moviesContainer = document.getElementById('movies');
+            moviesContainer.innerHTML = '';
+            movies.forEach(movie => {
+                const movieTile = document.createElement('div');
+                movieTile.className = 'movie-tile';
+                movieTile.innerHTML = `
+                    <img src="${movie.poster}" alt="${movie.title}">
+                    <div class="movie-title">${movie.title}</div>
+                `;
+                moviesContainer.appendChild(movieTile);
+            });
         });
 
         document.getElementById('toggle-theme').addEventListener('click', () => {
