@@ -53,62 +53,89 @@
                 font-size: 14px;
             }
         }
-        .movie-selection {
+        .hidden {
             display: none;
         }
+        .movie-selection {
+            display: flex;
+            justify-content: space-between;
+        }
+        .movie-tiles {
+            flex: 1;
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
         .movie-tile {
-            display: inline-block;
             width: 150px;
+            height: 200px;
+            background-color: #ccc;
             margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #333;
+        }
+        .side-tab {
+            width: 200px;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #f0f0f0;
+            border-left: 1px solid #ccc;
         }
-        .movie-tile img {
-            width: 100%;
-            border-radius: 10px;
-        }
-        .movie-title {
-            font-size: 16px;
-            margin: 10px 0;
-        }
-        .bottom-row {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+        .bottom-buttons {
             display: flex;
             justify-content: space-around;
-            background-color: #fff;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="home-page">
         <h1>Welcome to FlikPik</h1>
         <button id="create-room">Create Room</button>
         <input type="text" id="room-name" placeholder="Enter room name to join">
         <button id="join-room">Join Room</button>
         <button id="toggle-theme">Toggle Theme</button>
-        <button id="movie-selection">Enter Movie Selection Mode</button>
         <p id="room-info"></p>
         <p id="user-info"></p>
         <p id="error-message" style="color: red;"></p>
+        <div id="preferences" class="hidden">
+            <h2>Select Streaming Services</h2>
+            <label><input type="checkbox" value="Netflix"> Netflix</label>
+            <label><input type="checkbox" value="Hulu"> Hulu</label>
+            <label><input type="checkbox" value="Amazon Prime"> Amazon Prime</label>
+            <label><input type="checkbox" value="Disney+"> Disney+</label>
+            <h2>Select Genres</h2>
+            <label><input type="checkbox" value="Action"> Action</label>
+            <label><input type="checkbox" value="Comedy"> Comedy</label>
+            <label><input type="checkbox" value="Drama"> Drama</label>
+            <label><input type="checkbox" value="Horror"> Horror</label>
+            <button id="submit-preferences">Submit Preferences</button>
+        </div>
     </div>
-    <div class="movie-selection">
-        <div class="container">
+    <div class="movie-selection hidden">
+        <div class="movie-tiles">
             <h1>Movie Selection</h1>
             <div id="movies">
-                <!-- Movie tiles will be inserted here -->
+                <div class="movie-tile">Movie 1</div>
+                <div class="movie-tile">Movie 2</div>
+                <div class="movie-tile">Movie 3</div>
+                <div class="movie-tile">Movie 4</div>
             </div>
         </div>
-        <div class="bottom-row">
-            <button id="suggest">Suggest</button>
-            <button id="vibe-check">Vibe Check</button>
-            <button id="veto">Veto</button>
+        <div class="side-tab">
+            <h2>Users in Room</h2>
+            <ul id="user-list">
+                <!-- User names will be inserted here -->
+            </ul>
+            <p id="current-turn"></p>
         </div>
+    </div>
+    <div class="bottom-buttons hidden">
+        <button id="suggest">Suggest</button>
+        <button id="vibe-check">Vibe Check</button>
+        <button id="veto">Veto</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -123,18 +150,16 @@
             socket.emit('joinRoom', roomName);
         });
 
-        document.getElementById('movie-selection').addEventListener('click', () => {
-            socket.emit('enterMovieSelection');
-        });
-
         socket.on('roomCreated', (roomName) => {
             document.getElementById('room-info').textContent = `Room created: ${roomName}`;
             document.getElementById('error-message').textContent = '';
+            document.getElementById('preferences').classList.remove('hidden');
         });
 
         socket.on('roomJoined', (roomName) => {
             document.getElementById('room-info').textContent = `Joined room: ${roomName}`;
             document.getElementById('error-message').textContent = '';
+            document.getElementById('preferences').classList.remove('hidden');
         });
 
         socket.on('error', (message) => {
@@ -145,24 +170,32 @@
             document.getElementById('user-info').textContent = `Your name: ${userName}`;
         });
 
-        socket.on('enterMovieSelection', (movies) => {
-            document.querySelector('.container').style.display = 'none';
-            document.querySelector('.movie-selection').style.display = 'block';
-            const moviesContainer = document.getElementById('movies');
-            moviesContainer.innerHTML = '';
-            movies.forEach(movie => {
-                const movieTile = document.createElement('div');
-                movieTile.className = 'movie-tile';
-                movieTile.innerHTML = `
-                    <img src="${movie.poster}" alt="${movie.title}">
-                    <div class="movie-title">${movie.title}</div>
-                `;
-                moviesContainer.appendChild(movieTile);
-            });
-        });
-
         document.getElementById('toggle-theme').addEventListener('click', () => {
             document.body.classList.toggle('dark-theme');
+        });
+
+        document.getElementById('submit-preferences').addEventListener('click', () => {
+            const streamingServices = Array.from(document.querySelectorAll('#preferences input[type="checkbox"]:checked'))
+                .filter(input => input.parentElement.previousElementSibling && input.parentElement.previousElementSibling.tagName === 'H2' && input.parentElement.previousElementSibling.textContent === 'Select Streaming Services')
+                .map(input => input.value);
+            const genres = Array.from(document.querySelectorAll('#preferences input[type="checkbox"]:checked'))
+                .filter(input => input.parentElement.previousElementSibling && input.parentElement.previousElementSibling.tagName === 'H2' && input.parentElement.previousElementSibling.textContent === 'Select Genres')
+                .map(input => input.value);
+            console.log('Selected Streaming Services:', streamingServices);
+            console.log('Selected Genres:', genres);
+            socket.emit('submitPreferences', { streamingServices, genres });
+        });
+
+        socket.on('showMovieSelection', (users) => {
+            document.getElementById('home-page').classList.add('hidden');
+            document.querySelector('.movie-selection').classList.remove('hidden');
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = '';
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = user;
+                userList.appendChild(li);
+            });
         });
     </script>
 </body>
