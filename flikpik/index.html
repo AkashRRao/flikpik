@@ -1,71 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlikPik</title>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
     <style>
-        body, h1, button, input, p {
+        body,
+        h1,
+        button,
+        input,
+        p {
             font-family: 'Pixelify Sans', Arial, sans-serif;
+            background-color: #263238;
+            color: #ECEFF1;
         }
+
         body {
             margin: 20px;
             transition: background-color 0.3s, color 0.3s;
         }
+
         h1 {
             color: #333;
             text-align: center;
         }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
             text-align: center;
         }
-        button, input {
+
+        button,
+        input {
             margin: 10px 0;
             padding: 10px;
             width: 100%;
             max-width: 300px;
             font-size: 16px;
         }
+
         .dark-theme {
             background-color: #263238;
             color: #ECEFF1;
         }
+
         .dark-theme h1 {
             color: #ECEFF1;
         }
+
         .dark-theme button {
             background-color: #37474F;
             color: #ECEFF1;
         }
+
         .dark-theme input {
             background-color: #37474F;
             color: #ECEFF1;
             border: 1px solid #ECEFF1;
         }
+
         @media (max-width: 600px) {
             body {
                 margin: 10px;
             }
-            button, input {
+
+            button,
+            input {
                 font-size: 14px;
             }
         }
+
         .hidden {
             display: none;
         }
+
         .movie-selection {
             display: flex;
             justify-content: space-between;
         }
+
         .movie-tiles {
             flex: 1;
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
         }
+
         .movie-tile {
             width: 150px;
             height: 200px;
@@ -77,12 +100,14 @@
             font-size: 14px;
             color: #333;
         }
+
         .side-tab {
             width: 200px;
             padding: 10px;
             background-color: #f0f0f0;
             border-left: 1px solid #ccc;
         }
+
         .bottom-buttons {
             display: flex;
             justify-content: space-around;
@@ -90,52 +115,47 @@
         }
     </style>
 </head>
-<body>
+
+<body class="dark-theme">
     <div class="container" id="home-page">
         <h1>Welcome to FlikPik</h1>
         <button id="create-room">Create Room</button>
         <input type="text" id="room-name" placeholder="Enter room name to join">
         <button id="join-room">Join Room</button>
-        <button id="toggle-theme">Toggle Theme</button>
         <p id="room-info"></p>
         <p id="user-info"></p>
-        <p id="error-message" style="color: red;"></p>
-        <div id="preferences" class="hidden">
-            <h2>Select Streaming Services</h2>
-            <label><input type="checkbox" value="Netflix"> Netflix</label>
-            <label><input type="checkbox" value="Hulu"> Hulu</label>
-            <label><input type="checkbox" value="Amazon Prime"> Amazon Prime</label>
-            <label><input type="checkbox" value="Disney+"> Disney+</label>
-            <h2>Select Genres</h2>
-            <label><input type="checkbox" value="Action"> Action</label>
-            <label><input type="checkbox" value="Comedy"> Comedy</label>
-            <label><input type="checkbox" value="Drama"> Drama</label>
-            <label><input type="checkbox" value="Horror"> Horror</label>
-            <button id="submit-preferences">Submit Preferences</button>
-        </div>
+        <button id="submit-preferences">select movies!</button>
     </div>
-    <div class="movie-selection hidden">
+    <div class="container hidden" id="movie-selection">
+        <h1>Movie Selection</h1>
+        <div class="container" style="overflow-x: auto">
+            <label>Genres</label>
+            <div style="display: inline-block;">
+            <label style="display: inline-block"><input type="checkbox" value="Action"> Action</label>
+            <label style="display: inline-block"><input type="checkbox" value="Comedy"> Comedy</label>
+            <label style="display: inline-block"><input type="checkbox" value="Drama"> Drama</label>
+            <label style="display: inline-block"><input type="checkbox" value="Horror"> Horror</label>
+            <label style="display: inline-block"><input type="checkbox" value="Romance"> Romance</label>
+            <label style="display: inline-block"><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
+            <label style="display: inline-block"><input type="checkbox" value="Thriller"> Thriller</label>
+            <label style="display: inline-block"><input type="checkbox" value="Fantasy"> Fantasy</label>
+            <label style="display: inline-block"><input type="checkbox" value="Documentary"> Documentary</label>
+            <label style="display: inline-block"><input type="checkbox" value="Animation"> Animation</label>
+            </div>
+        </div>
         <div class="movie-tiles">
-            <h1>Movie Selection</h1>
-            <div id="movies">
+            <div id="movies" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                 <div class="movie-tile">Movie 1</div>
                 <div class="movie-tile">Movie 2</div>
                 <div class="movie-tile">Movie 3</div>
                 <div class="movie-tile">Movie 4</div>
             </div>
         </div>
-        <div class="side-tab">
-            <h2>Users in Room</h2>
-            <ul id="user-list">
-                <!-- User names will be inserted here -->
-            </ul>
-            <p id="current-turn"></p>
-        </div>
     </div>
-    <div class="bottom-buttons hidden">
+    <div class="hidden container" id="bottom-buttons">
+        <button id="next-page">Next Page</button>
         <button id="suggest">Suggest</button>
         <button id="vibe-check">Vibe Check</button>
-        <button id="veto">Veto</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -170,10 +190,6 @@
             document.getElementById('user-info').textContent = `Your name: ${userName}`;
         });
 
-        document.getElementById('toggle-theme').addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-        });
-
         document.getElementById('submit-preferences').addEventListener('click', () => {
             const streamingServices = Array.from(document.querySelectorAll('#preferences input[type="checkbox"]:checked'))
                 .filter(input => input.parentElement.previousElementSibling && input.parentElement.previousElementSibling.tagName === 'H2' && input.parentElement.previousElementSibling.textContent === 'Select Streaming Services')
@@ -188,15 +204,10 @@
 
         socket.on('showMovieSelection', (users) => {
             document.getElementById('home-page').classList.add('hidden');
-            document.querySelector('.movie-selection').classList.remove('hidden');
-            const userList = document.getElementById('user-list');
-            userList.innerHTML = '';
-            users.forEach(user => {
-                const li = document.createElement('li');
-                li.textContent = user;
-                userList.appendChild(li);
-            });
+            document.getElementById('movie-selection').classList.remove('hidden');
+            document.getElementById('bottom-buttons').classList.remove('hidden');
         });
     </script>
 </body>
+
 </html>

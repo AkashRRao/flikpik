@@ -29,9 +29,8 @@ function generateRandomName() {
 const activeRooms = new Map();
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
-
     const userName = generateRandomName();
+    console.log(userName, ' user connected');
     socket.emit('userAssigned', userName);
 
     socket.on('createRoom', () => {
