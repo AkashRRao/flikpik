@@ -1,5 +1,15 @@
 # flikpik
 
+## dev
+```
+$ cd app/frontend
+$ npm install
+$ npm run build
+$ cd ../backend
+$ npm install
+$ npm start
+```
+
 ## todo:
 
 1. link to movie of the night api
