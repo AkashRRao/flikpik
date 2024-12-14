@@ -5,7 +5,7 @@
 
   let message = '';
   let messages = [];
-  const socket = io('https://super-duper-garbanzo-w9r699jgwvxf5wjg-3000.app.github.dev'); // Use the forwarded URL
+  const socket = io(import.meta.env.VITE_SOCKET_IO_URL); // Use the forwarded URL
 
   socket.on('connect', () => {
     console.log('Connected to server');

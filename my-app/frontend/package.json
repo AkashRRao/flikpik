@@ -6,6 +6,7 @@
     "build": "rollup -c"
   },
   "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.1",
     "rollup": "^2.3.4",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.7",
     "rollup-plugin-serve": "^1.1.1",
     "socket.io-client": "^4.0.0",
     "svelte-spa-router": "^4.0.1"

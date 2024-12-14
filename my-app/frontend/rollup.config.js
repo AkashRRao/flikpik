@@ -4,6 +4,10 @@ import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import serve from 'rollup-plugin-serve';
+import replace from '@rollup/plugin-replace';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -30,6 +34,10 @@ export default {
     postcss({
       extract: true,
       minimize: production,
+    }),
+    replace({
+      preventAssignment: true,
+      'import.meta.env.VITE_SOCKET_IO_URL': JSON.stringify(process.env.VITE_SOCKET_IO_URL)
     }),
     !production && serve({
       contentBase: 'public',
