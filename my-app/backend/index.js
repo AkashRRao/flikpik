@@ -10,12 +10,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:5000", // Ensure the correct origin
-    methods: ["GET", "POST"]
-  }
-});
+const io = new Server(server, {});
 
 const PORT = process.env.PORT || 3000;
 
