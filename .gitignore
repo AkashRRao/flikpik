@@ -65,7 +65,15 @@ jspm_packages/
 
 # Gatsby files
 .cache/
-public/
+
+# SvelteKit build output
+.svelte-kit/
+
+# SvelteKit static files
+static/
+
+# SvelteKit build artifacts
+build/
 
 # vuepress build output
 .vuepress/dist/

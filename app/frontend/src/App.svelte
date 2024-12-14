@@ -9,6 +9,7 @@
 
   socket.on('connect', () => {
     console.log('Connected to server');
+    console.log('a;sldkjf', import.meta.env.VITE_SOCKET_IO_URL);
   });
 
   socket.on('message', (msg) => {
