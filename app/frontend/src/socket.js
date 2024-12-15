@@ -33,6 +33,10 @@ const connect = (url) => {
         messages.update((currentMessages) => [...currentMessages, message]);
     });
 
+    socket.on('roomCreated', (roomName) => {
+        console.log('Room created:', roomName);
+    });
+
     socket.on('reconnect', (attemptNumber) => {
         console.log("Reconnected after " + attemptNumber + " attempts.");
         isConnected.set(true);
