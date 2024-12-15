@@ -37,7 +37,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('join-room', (roomName) => {
-    let user = users.get(socket.id);
     let room = rooms.get(roomName);
     if (room != undefined) {
       user.JoinRoom(room);
@@ -46,6 +45,10 @@ io.on('connection', (socket) => {
     } else {
       console.log('Room not found', roomName);
     }
+  });
+
+  socket.on('go-to-movie-suggestion-mode', () => {
+    user.GoToMoveSuggestionMode(socket);
   });
 
 });

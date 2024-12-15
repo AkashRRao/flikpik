@@ -37,6 +37,10 @@ const connect = (url) => {
         console.log('Room created:', roomName);
     });
 
+    socket.on('movieSuggestionMode', (movies) => {
+        console.log('movie suggestion mode movies', movies);
+    });
+
     socket.on('reconnect', (attemptNumber) => {
         console.log("Reconnected after " + attemptNumber + " attempts.");
         isConnected.set(true);

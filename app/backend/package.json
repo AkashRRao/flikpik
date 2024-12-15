@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^4.0.0"
+    "socket.io": "^4.0.0",
+    "streaming-availability": "^4.4.0"
   }
 }
