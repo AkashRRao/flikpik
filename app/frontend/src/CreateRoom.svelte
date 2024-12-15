@@ -25,7 +25,7 @@
             <p>Welcome, {userName}!</p>
             {#if roomName}
                 <p>Currently in room: {roomName}</p>
-                {#if usersInRoom && usersInRoom.length > 1}
+                {#if usersInRoom && usersInRoom.length >= 1}
                     <p>with</p>
                     <ul>
                         {#each usersInRoom as user}

@@ -61,6 +61,11 @@ const HandleRoomEvents = (socket) => {
         usersInRoom.set(response.users);
     });
 
+    socket.on('room:user-left:res', (response) => {
+        console.log('user left: ', response.userLeft);
+        usersInRoom.set(response.users);
+    });
+
     socket.on('room:select-movies:res', (response) => {
         console.log('going into select-movies mode', response.shows.length, response.movieFilter);
         showList.set(response.shows);

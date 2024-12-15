@@ -32,6 +32,15 @@ const HandleUserEvents = (socket) => {
   socket.emit('user:connect:res', { name: user.name });
   socket.on('disconnect', () => {
     // let everyone in the room know
+    let user = User.users.get(socket.id);
+    if (user.room !== null) {
+      user.room.users = user.room.users.filter(u => u.id !== user.id);
+      io.to(user.room.name).emit('room:user-left:res', {
+        userLeft: user.name,
+        users: user.room.users.map(user => user.name)
+      });
+    }
+    User.users.delete(socket.id);
     console.log('user disconnected');
   });
 }
@@ -80,7 +89,7 @@ const HandleRoomEvents = (socket) => {
     }
 
     // create a room and add the user to it
-    let room = new Room(user.name.substring(0, 5));
+    let room = new Room(user.name.substring(0, 4));
     user.room = room;
     room.users.push(user);
     socket.join(room.name);
@@ -107,6 +116,7 @@ const HandleRoomEvents = (socket) => {
       return;
     }
 
+    user.room = room;
     room.users.push(user);
     socket.join(room.name);
 
