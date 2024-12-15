@@ -6,6 +6,7 @@
   import { socketService } from "./socket";
   import Home from "./Home.svelte";
   import SendMessage from "./SendMessage.svelte";
+  import MovieSelection from "./MovieSelection.svelte";
 
   onMount(() => {
     socketService.connect(import.meta.env.VITE_SOCKET_IO_URL);
@@ -16,7 +17,7 @@
   });
 </script>
 
-<main class="container">
+<main class="container-fluid" style="max-width: 500px">
   <Router>
     <nav class="navbar navbar-expand-lg navbar-light">
       <Link to="/"
@@ -26,6 +27,9 @@
       <Link to="/send-message">
         <a class="navbar-brand text-white pixelify-font" href="/">chat</a>
       </Link>
+      <Link to="/movie-selection">
+        <a class="navbar-brand text-white pixelify-font" href="/">select!</a>
+      </Link>
     </nav>
 
     <Route path="/">
@@ -33,6 +37,9 @@
     </Route>
     <Route path="/send-message">
       <SendMessage />
+    </Route>
+    <Route path="/movie-selection">
+      <MovieSelection />
     </Route>
   </Router>
 </main>

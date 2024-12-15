@@ -12,11 +12,6 @@ const connect = (url) => {
         return;
     }
 
-    if (socket && socket.connecting) {
-        console.log("Already connecting");
-        return;
-    }
-
     socket = io(url);
 
     socket.on('connect', () => {
