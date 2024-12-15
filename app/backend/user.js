@@ -39,16 +39,10 @@ export default class User {
     this.room.GoToMovieSuggestionMode();
     const client = new streamingAvailability.Client(new
       streamingAvailability.Configuration({ apiKey: RAPID_API_KEY }));
-    const searchResult = await client.showsApi.searchShowsByFilters(({
-      country: "us",
-      catalogs: ["netflix"],
-      genres: ["action"],
-      showType: streamingAvailability.ShowType.Movie,
-      orderBy: "popularity_1year",
-    }));
-    console.log(searchResult)
-    socket.broadcast.emit('movieSuggestionMode', searchResult);
-    socket.emit('movieSuggestionMode', searchResult);
+    const searchResult = await client.showsApi.searchShowsByFilters((this.room.movieFilter));
+    console.log(searchResult.shows.length, 'movies found')
+    socket.broadcast.emit('movieSuggestionMode', searchResult, this.room.movieFilter);
+    socket.emit('movieSuggestionMode', searchResult, this.room.movieFilter);
   }
 
   UserConnected(socket) {

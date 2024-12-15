@@ -1,9 +1,18 @@
+import * as streamingAvailability from "streaming-availability";
+
 export default class Room {
     constructor(name) {
         this.name = name;
         this.users = [];
         this.roomState = RoomState.OPEN;
         this.currentSuggestor = null;
+        this.movieFilter = {
+            country: "us",
+            catalogs: ["netflix"],
+            genres: ["action"],
+            showType: streamingAvailability.ShowType.Movie,
+            orderBy: "popularity_1year",
+        }
     }
 
     AddUser(user) {
