@@ -1,11 +1,19 @@
 import * as streamingAvailability from "streaming-availability";
 
 export default class Room {
+    // map from room name to room
+    static rooms = new Map();
+
+    static State = Object.freeze({
+        OPEN: 'open',  // this state is when someone creates a room but not yet started movie suggestion
+        MOVIE_SUGGESTION: 'movie_suggestion', //
+    });
+
     constructor(name) {
         this.name = name;
         this.users = [];
-        this.roomState = RoomState.OPEN;
-        this.currentSuggestor = null;
+        this.state = Room.State.OPEN;
+        this.userInPlay = null;
         this.movieFilter = {
             country: "us",
             catalogs: ["netflix"],
@@ -13,27 +21,6 @@ export default class Room {
             showType: streamingAvailability.ShowType.Movie,
             orderBy: "popularity_1year",
         }
-    }
-
-    AddUser(user) {
-        if (this.roomState == RoomState.OPEN) {
-            this.users.push(user);
-            return;
-        }
-        return exception('room is not open for adding users.')
-    }
-
-    GoToMovieSuggestionMode() {
-        if (this.roomState == RoomState.OPEN) {
-            this.roomState = RoomState.MOVIE_SUGGESTION;
-            this.currentSuggestor = this.users[0];
-            return;
-        }
-        return exception('room is not open for movie suggestion.')
+        Room.rooms.set(this.name, this);
     }
 }
-
-const RoomState = Object.freeze({
-    OPEN: 'open',  // this state is when someone creates a room but not yet started movie suggestion
-    MOVIE_SUGGESTION: 'movie_suggestion', //
-});

@@ -9,7 +9,7 @@
 
     const sendMessage = () => {
         if (messageToSend) {
-            socketService.sendMessage("message", messageToSend);
+            socketService.sendMessage("chat:message", messageToSend);
             messageToSend = ""; // Clear the input field
         }
     };
@@ -40,5 +40,9 @@
                 <li class="list-group-item">{msg}</li>
             {/each}
         </ul>
+    </div>
+{:else}
+    <div class="alert alert-danger mt-3" role="alert">
+        Not connected to the server!
     </div>
 {/if}
