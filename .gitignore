@@ -96,3 +96,8 @@ build/
 
 # Mac system files
 .DS_Store
+
+# .gitignore
+
+# Ignore the EXPLAINER.md file
+EXPLAINER.md
