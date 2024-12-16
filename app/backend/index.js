@@ -47,8 +47,13 @@ const HandleUserEvents = (socket) => {
 
 const HandleChatEvents = (socket) => {
   socket.on('chat:message', (message) => {
-    socket.broadcast.emit('chat:message:res', message);
-    socket.emit('chat:message:res', message);
+    const user = User.users.get(socket.id);
+    if (user.room == null) {
+      socket.broadcast.emit('chat:message:res', message);
+      socket.emit('chat:message:res', message);
+    } else {
+      io.to(user.room.name).emit('chat:message:res', message);
+    }
   });
 }
 
