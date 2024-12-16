@@ -40,9 +40,7 @@
         <ul class="navbar-nav">
           <li class="nav-item">
             <Link class="nav-link text-white pixelify-font" to="/create-room">
-              <a class="nav-link text-white pixelify-font" href="/"
-                >create room</a
-              >
+              <a class="nav-link text-white pixelify-font" href="/">room</a>
             </Link>
           </li>
           <li class="nav-item">

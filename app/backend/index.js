@@ -26,9 +26,18 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
 });
 
+function generateRandomName() {
+  const adjectives = ['Quick', 'Lazy', 'Happy', 'Sad', 'Angry'];
+  const animals = ['Fox', 'Dog', 'Cat', 'Mouse', 'Bear'];
+  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const animal = animals[Math.floor(Math.random() * animals.length)];
+  return `${adjective}${animal}${Math.floor(Math.random() * 1000)}`;
+}
+
+
 const HandleUserEvents = (socket) => {
   // maybe check if this id already exists?
-  let user = new User(socket.id);
+  let user = new User(generateRandomName(), socket.id);
   socket.emit('user:connect:res', { name: user.name });
   socket.on('disconnect', () => {
     // let everyone in the room know
@@ -94,7 +103,7 @@ const HandleRoomEvents = (socket) => {
     }
 
     // create a room and add the user to it
-    let room = new Room(user.name.substring(0, 4));
+    let room = new Room(generateRandomName());
     user.room = room;
     room.users.push(user);
     socket.join(room.name);
