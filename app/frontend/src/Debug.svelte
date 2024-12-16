@@ -1,12 +1,10 @@
 <script>
     import { socketService } from "./socket";
-    let messages = [];
     let message = "";
     let jsonString = "";
     let isConnected = false;
     let isJson = false;
 
-    $: socketService.messages.subscribe((value) => (messages = value));
     $: socketService.isConnected.subscribe((value) => (isConnected = value));
 </script>
 
@@ -37,11 +35,6 @@
         />
         <label class="form-check-label" for="isJsonCheck"> Send as JSON </label>
     </div>
-    <ul class="list-group">
-        {#each messages as msg}
-            <li class="list-group-item">{msg}</li>
-        {/each}
-    </ul>
 </div>
 {:else}
 <div class="alert alert-danger mt-3" role="alert">
